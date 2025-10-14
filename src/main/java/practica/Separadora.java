@@ -63,8 +63,10 @@ public class Separadora
             }
             else
             {
-                if(leyendoTexto = true)
+                if(leyendoTexto == true)
                 {
+                    linea = linea.replaceFirst("^\\s+", ""); // Eliminamos los espacios al inicio de cada linea
+                    linea = linea.replaceAll(" {2,}", " "); // Reemplaza todos los espacios múltiples (2 o más) por un solo espacio
                     System.out.println(linea);
                 }
             }
