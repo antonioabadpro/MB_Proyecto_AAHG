@@ -4,7 +4,6 @@
  */
 package practica;
 
-import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,14 +15,20 @@ public class Principal
 {
     public static void main(String[] args)
     {
+        String nomColeccion = "miColeccion";
+        String nomCorpus = "MED.ALL";
+        
         // Leemos el Fichero que nos dan 'MED.ALL'
         try
         {
-            Separadora.leerFichero("MED.ALL");
-        } catch (FileNotFoundException ex)
+            //Separadora.leerFichero("MED.ALL");
+            
+            //Solr.consultarTodosDocumentos(nomColeccion);
+            Separadora.leerFicheroSeparado(nomCorpus);
+        } catch (Exception e)
         {
-            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("\nError al leer el fichero -> 'Principal'");
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, e);
+            System.out.println("\nError en -> 'Principal'");
         }
     }
     

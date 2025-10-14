@@ -30,4 +30,42 @@ public class Separadora
         }
     }
     
+    public static void leerFicheroSeparado(String rutaFichero) throws FileNotFoundException
+    {
+        String linea = null;
+        File f = new File(rutaFichero);
+        Scanner sc = new Scanner(f);
+        String v_linea_id[]; // Vector que contiene la linea del fichero dividida en 2 posiciones -> 0(Información NO relevante), 1(ID)
+        String v_linea_texto[]; // Vector que contiene la linea del fichero dividida en 2 posiciones -> 0(Información NO relevante), 1(Texto)
+        Integer id;
+        String texto = "";
+        boolean leyendoTexto = false;
+        
+        while(sc.hasNextLine())
+        {
+            linea = sc.nextLine(); // Leemos la linea del Corpus
+            
+            if(linea.startsWith(".I")) // Si la linea que hemos leido empieza por ".I" significa que en la pos 1, tenemos el 'id' del documento
+            {
+                leyendoTexto = false;
+                v_linea_id = linea.split("\\.I");
+                id = Integer.valueOf(v_linea_id[1].trim());
+                System.out.println("ID:\n" + id);
+            }
+            if(linea.startsWith(".W")) // Si la linea que hemos leido empieza por ".I" significa que en la pos 1, tenemos el 'texto' del documento
+            {
+                leyendoTexto = true;
+            }
+            else
+            {
+                if(leyendoTexto = true)
+                {
+                    System.out.println(linea);
+                }
+            }
+        }
+        sc.close();
+    }
 }
+
+
