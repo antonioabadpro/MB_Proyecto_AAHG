@@ -152,10 +152,12 @@ public class Separadora
                         linea = linea.replaceAll(" {2,}", " "); // Reemplaza todos los espacios múltiples (2 o más) por un solo espacio
 
                         // Concatenamos la línea al texto actual con un "\n" igual que en el Corpus original
+                        /*
                         if (textoActual.isEmpty()==false)
                         {
                             textoActual = textoActual + "\n";
                         }
+                        */
                         textoActual = textoActual + linea;
                     }
                 }   

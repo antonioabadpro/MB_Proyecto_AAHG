@@ -5,11 +5,13 @@
 package practica;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 
@@ -29,11 +31,10 @@ public class Solr
     {
        HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
        SolrQuery consulta = new SolrQuery();
+       
        consulta.setRows(Integer.SIZE); // Hacemos que la consulta muestre todas las filas del documento
        consulta.setQuery("*:*");
-       //query.setQuery("Apple");
-       //query.addFilterQuery("cat:electronics");
-       //query.setFields("id","price","merchant","cat","store");
+       
        QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
        SolrDocumentList docs = rsp.getResults();
        for (int i = 0; i < docs.size(); ++i)
@@ -52,16 +53,44 @@ public class Solr
     {
         // Preparamos el Cliente Solr
         String rutaServidorSolr = "http://localhost:8983/Solr/" + nomColeccion; 
-        SolrClient Solr = new HttpSolrClient.Builder(rutaServidorSolr).build();   
+        SolrClient cliente = new HttpSolrClient.Builder(rutaServidorSolr).build();
 
         // Preparando el Documento Solr
         SolrInputDocument doc = new SolrInputDocument();   
 
         // Realizamos una consulta que elimina todos los documentos de la coleccion de Solr
-        Solr.deleteByQuery("*");
+        cliente.deleteByQuery("*");
 
         // Realizamos un commit
-        Solr.commit(); 
+        cliente.commit(); 
+    }
+    
+    /**
+     * Indexa un conjunto de documentos provenientes de una coleccion origen en una coleccion destino
+     * @param nomColeccionOrigen Nombre de la Coleccion Solr de la que queremos coger los documentos para indexarlos en otra
+     * @param nomColeccionDestino Nombre de la Coleccion Solr en la que queremos indexar los documentos
+     * @throws SolrServerException Lanza una Excepcion en caso de que NO pueda conectarse con la coleccion de Solr
+     * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la indexacion de la coleccion de Solr
+     */
+    public static void indexarDocumentos(String rutaFichero, String nomColeccion) throws SolrServerException, IOException
+    {
+        final SolrClient cliente = new HttpSolrClient.Builder("http://localhost:8983/solr").build();
+        ArrayList<Integer> v_id = new ArrayList<Integer>();
+        ArrayList<String> v_textos = new ArrayList<String>();
+        
+        v_id = Separadora.obtenerIdentificadores(rutaFichero);
+        v_textos = Separadora.obtenerTextos(rutaFichero);
+        
+        // Indexamos los documentos del fichero/corpus
+        for(int i=0; i<v_id.size(); i++)
+        {
+            final SolrInputDocument doc = new SolrInputDocument();
+            doc.addField("id", v_id.get(i));
+            doc.addField("texto", v_textos.get(i));
+            
+            final UpdateResponse updateResponse = cliente.add(nomColeccion, doc);
+        }
+        cliente.commit(nomColeccion); // Realizamos un commit
     }
     
 }
