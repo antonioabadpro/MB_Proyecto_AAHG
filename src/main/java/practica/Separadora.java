@@ -55,7 +55,8 @@ public class Separadora
                 leyendoTexto = false;
                 v_linea_id = linea.split("\\.I");
                 id = Integer.valueOf(v_linea_id[1].trim());
-                System.out.println("ID:\n" + id);
+                System.out.println("\nID: " + id);
+                System.out.println("\nTexto: \n");
             }
             if(linea.startsWith(".W")) // Si la linea que hemos leido empieza por ".I" significa que en la pos 1, tenemos el 'texto' del documento
             {
@@ -67,7 +68,9 @@ public class Separadora
                 {
                     linea = linea.replaceFirst("^\\s+", ""); // Eliminamos los espacios al inicio de cada linea
                     linea = linea.replaceAll(" {2,}", " "); // Reemplaza todos los espacios múltiples (2 o más) por un solo espacio
-                    System.out.println(linea);
+                    // System.out.println(linea);
+                    texto = linea;
+                    System.out.println(texto);
                 }
             }
         }
