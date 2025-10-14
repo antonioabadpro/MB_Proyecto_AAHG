@@ -4,6 +4,7 @@
  */
 package practica;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,7 +25,16 @@ public class Principal
             //Separadora.leerFichero("MED.ALL");
             
             //Solr.consultarTodosDocumentos(nomColeccion);
-            Separadora.leerFicheroSeparado(nomCorpus);
+            //Separadora.leerFicheroSeparado(nomCorpus);
+            
+            ArrayList<Integer> v_id = Separadora.obtenerIdentificadores(nomCorpus);
+            ArrayList<String> v_textos = Separadora.obtenerTextos(nomCorpus);
+            
+            for(int i=0; i<v_id.size(); i++)
+            {
+                System.out.println("\nID: " + v_id.get(i));
+                System.out.println("\nTexto: \n\n" + v_textos.get(i));
+            }
         } catch (Exception e)
         {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, e);
