@@ -21,7 +21,7 @@ public class Separadora
      * @return Devuelve un Array con todos los identificadores del Fichero/Corpus dado por parametro
      * @throws FileNotFoundException Lanza una excepcion en caso de que NO se encuentre la ruta del fichero introducida por parametro
      */
-    public static ArrayList<Integer> obtenerIdentificadores(String rutaFichero) throws FileNotFoundException
+    public static ArrayList<Integer> obtenerIdentificadoresCorpus(String rutaFichero) throws FileNotFoundException
     {
         ArrayList<Integer> v_id = new ArrayList<Integer>();
         
@@ -52,7 +52,7 @@ public class Separadora
      * @return Devuelve un Array con todos los textos de cada identificador del Fichero/Corpus dado por parametro
      * @throws FileNotFoundException Lanza una excepcion en caso de que NO se encuentre la ruta del fichero introducida por parametro
      */
-    public static ArrayList<String> obtenerTextos(String rutaFichero) throws FileNotFoundException
+    public static ArrayList<String> obtenerTextosCorpus(String rutaFichero) throws FileNotFoundException
     {
         ArrayList<String> v_textos = new ArrayList<>();
         String linea = null;

@@ -78,8 +78,8 @@ public class Solr
         ArrayList<Integer> v_id = new ArrayList<Integer>();
         ArrayList<String> v_textos = new ArrayList<String>();
         
-        v_id = Separadora.obtenerIdentificadores(rutaFichero);
-        v_textos = Separadora.obtenerTextos(rutaFichero);
+        v_id = Separadora.obtenerIdentificadoresCorpus(rutaFichero);
+        v_textos = Separadora.obtenerTextosCorpus(rutaFichero);
         
         // Indexamos los documentos del fichero/corpus
         for(int i=0; i<v_id.size(); i++)
