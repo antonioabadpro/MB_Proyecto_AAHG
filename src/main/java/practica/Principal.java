@@ -20,7 +20,7 @@ public class Principal
     /**
      * Primera prueba realizada para la v0.1
      */
-    public static void pruebaLecturaCorpus()
+    public static void lecturaCorpus()
     {
         String rutaCorpus = "MED.ALL";
 
@@ -66,7 +66,7 @@ public class Principal
     /**
      * Primera prueba realizada para la v0.2
      */
-    public static void pruebaLecturaPalabrasConsultas()
+    public static void lecturaPalabrasConsultas()
     {
         String rutaConsultas = "MED.QRY";
         
@@ -83,27 +83,26 @@ public class Principal
         }
     }
     
-    public static void main(String[] args)
+    public static void mostrarDocumentosResultadosConsultas5Palabras()
     {
-        String coleccion_original = "miColeccion";
         String nomColeccion = "coleccionPrueba";
-        String rutaCorpus = "MED.ALL";
         String rutaConsultas = "MED.QRY";
         
         try
         {
-            ArrayList<ArrayList<String>> v_resultado_consultas=new ArrayList<>();
+            ArrayList<String> texto_consulta = Separadora.obtener5PrimerasPalabras(rutaConsultas); // Para mostrar el texto de cada Consulta
+            ArrayList<ArrayList<Documento>> v_resultado_consultas=new ArrayList<>();
             v_resultado_consultas=Solr.consultar5Palabras(nomColeccion, rutaConsultas);
             
             // Mostramos los Documentos resultado de cada Consulta realizada
             for (int i = 0; i < v_resultado_consultas.size(); i++)
             {
-                System.out.println("Consulta " + (i + 1) + ":");
-                for (String doc : v_resultado_consultas.get(i))
+                System.out.println("\n\n\t\t\t********** Consulta " + (i + 1) + ": " + texto_consulta.get(i) + " **********");
+                for (Documento d : v_resultado_consultas.get(i))
                 {
-                    System.out.println("  " + doc);
+                    System.out.println("\nDocumento " + d.getId() + ": ");
+                    System.out.println(d.getTexto());
                 }
-                System.out.println();
             }
 
         } catch (SolrServerException ex)
@@ -113,6 +112,16 @@ public class Principal
         {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static void main(String[] args)
+    {
+        String coleccion_original = "miColeccion";
+        String rutaCorpus = "MED.ALL";
+        String nomColeccion = "coleccionPrueba";
+        String rutaConsultas = "MED.QRY";
+        
+        Principal.mostrarDocumentosResultadosConsultas5Palabras();
         
     }
     

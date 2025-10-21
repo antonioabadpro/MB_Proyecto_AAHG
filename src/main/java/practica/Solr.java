@@ -68,8 +68,8 @@ public class Solr
     
     /**
      * Indexa un conjunto de documentos provenientes de una coleccion origen en una coleccion destino
-     * @param nomColeccionOrigen Nombre de la Coleccion Solr de la que queremos coger los documentos para indexarlos en otra
-     * @param nomColeccionDestino Nombre de la Coleccion Solr en la que queremos indexar los documentos
+     * @param rutaFichero Nombre del Fichero/Corpus del que queremos extraer los datos para indexarlos
+     * @param nomColeccion Nombre de la Coleccion Solr en la que queremos indexar los documentos
      * @throws SolrServerException Lanza una Excepcion en caso de que NO pueda conectarse con la coleccion de Solr
      * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la indexacion de la coleccion de Solr
      */
@@ -94,29 +94,40 @@ public class Solr
         cliente.commit(nomColeccion); // Realizamos un commit
     }
     
-    public static ArrayList<ArrayList<String>> consultar5Palabras(String nomColeccion, String rutaConsultas) throws SolrServerException, IOException
+    /**
+     * Devuelve el resultado de todas las Consultas de las 5 primeras palabras del Fichero/Corpus introducido por parametro (MED.QRY)
+     * @param nomColeccion Nombre de la Coleccion Solr
+     * @param rutaConsultas Nombre del Fichero/Corpus sobre el que queremos hacer la consulta (MED.QRY)
+     * @return Devuelve un array que contiene un array con los Documentos resultantes de cada Consulta realizada
+     * @throws SolrServerException Lanza una Excepcion en caso de que NO pueda conectarse con la coleccion de Solr
+     * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la indexacion de la coleccion de Solr
+     */
+    public static ArrayList<ArrayList<Documento>> consultar5Palabras(String nomColeccion, String rutaConsultas) throws SolrServerException, IOException
     {
        HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
        SolrQuery consulta = new SolrQuery();
-       ArrayList<ArrayList<String>> v_resultado_consultas=new ArrayList<>();
+       ArrayList<ArrayList<Documento>> v_resultado_consultas=new ArrayList<>();
        
        consulta.setRows(Integer.SIZE); // Hacemos que la consulta muestre todas las filas del documento
        ArrayList<String> v_palabras = Separadora.obtener5PrimerasPalabras(rutaConsultas);
        
        // Realizamos la Consulta en cada Documento del Corpus
-       for(int i=0; i<v_palabras.size(); i++)
+       for(String texto_consulta: v_palabras)
        {
-           consulta.setQuery("texto:" + v_palabras.get(i));
+           consulta.setQuery("texto:" + texto_consulta);
            QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
            SolrDocumentList docs = rsp.getResults();
            
-           ArrayList<String> documentos_consulta = new ArrayList<>(); // Creamos un array que contiene los documentos respuesta de cada Consulta
+           ArrayList<Documento> documentos_consulta = new ArrayList<>(); // Creamos un array que contiene los documentos respuesta de cada Consulta
            
            // Recorremos cada Documento devuelto para la Consulta y almacenamos los resultados en un array
            for (SolrDocument doc: docs)
            {
-               String texto_resultado = doc.getFieldValue("texto").toString();
-               documentos_consulta.add(texto_resultado);
+               int id_doc=Integer.parseInt(doc.getFieldValue("id").toString());
+               String texto_doc = doc.getFieldValue("texto").toString();
+               // Creamos el nuevo documento con los datos devueltos en la Consulta
+               Documento d=new Documento(id_doc, texto_doc);
+               documentos_consulta.add(d);
            }
            v_resultado_consultas.add(documentos_consulta);
        }
