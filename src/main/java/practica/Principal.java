@@ -17,6 +17,9 @@ import org.apache.solr.client.solrj.SolrServerException;
  */
 public class Principal
 {
+    /**
+     * Primera prueba realizada para la v0.1
+     */
     public static void pruebaLecturaCorpus()
     {
         String rutaCorpus = "MED.ALL";
@@ -39,6 +42,9 @@ public class Principal
         }
     }
     
+    /**
+     * Prueba realizada para comprobar que la v0.1 funciona correctamente
+     */
     public static void pruebaV01()
     {
         String nomColeccion = "coleccionPrueba";
@@ -57,6 +63,9 @@ public class Principal
         }
     }
     
+    /**
+     * Primera prueba realizada para la v0.2
+     */
     public static void pruebaLecturaPalabrasConsultas()
     {
         String rutaConsultas = "MED.QRY";
