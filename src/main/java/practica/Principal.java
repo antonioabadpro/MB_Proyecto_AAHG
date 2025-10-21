@@ -90,7 +90,29 @@ public class Principal
         String rutaCorpus = "MED.ALL";
         String rutaConsultas = "MED.QRY";
         
-        Principal.pruebaLecturaPalabrasConsultas();
+        try
+        {
+            ArrayList<ArrayList<String>> v_resultado_consultas=new ArrayList<>();
+            v_resultado_consultas=Solr.consultar5Palabras(nomColeccion, rutaConsultas);
+            
+            // Mostramos los Documentos resultado de cada Consulta realizada
+            for (int i = 0; i < v_resultado_consultas.size(); i++)
+            {
+                System.out.println("Consulta " + (i + 1) + ":");
+                for (String doc : v_resultado_consultas.get(i))
+                {
+                    System.out.println("  " + doc);
+                }
+                System.out.println();
+            }
+
+        } catch (SolrServerException ex)
+        {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     

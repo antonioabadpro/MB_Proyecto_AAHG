@@ -12,6 +12,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 
@@ -91,6 +92,36 @@ public class Solr
             final UpdateResponse updateResponse = cliente.add(nomColeccion, doc);
         }
         cliente.commit(nomColeccion); // Realizamos un commit
+    }
+    
+    public static ArrayList<ArrayList<String>> consultar5Palabras(String nomColeccion, String rutaConsultas) throws SolrServerException, IOException
+    {
+       HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
+       SolrQuery consulta = new SolrQuery();
+       ArrayList<ArrayList<String>> v_resultado_consultas=new ArrayList<>();
+       
+       consulta.setRows(Integer.SIZE); // Hacemos que la consulta muestre todas las filas del documento
+       ArrayList<String> v_palabras = Separadora.obtener5PrimerasPalabras(rutaConsultas);
+       
+       // Realizamos la Consulta en cada Documento del Corpus
+       for(int i=0; i<v_palabras.size(); i++)
+       {
+           consulta.setQuery("texto:" + v_palabras.get(i));
+           QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
+           SolrDocumentList docs = rsp.getResults();
+           
+           ArrayList<String> documentos_consulta = new ArrayList<>(); // Creamos un array que contiene los documentos respuesta de cada Consulta
+           
+           // Recorremos cada Documento devuelto para la Consulta y almacenamos los resultados en un array
+           for (SolrDocument doc: docs)
+           {
+               String texto_resultado = doc.getFieldValue("texto").toString();
+               documentos_consulta.add(texto_resultado);
+           }
+           v_resultado_consultas.add(documentos_consulta);
+       }
+       
+       return v_resultado_consultas;
     }
     
 }
