@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -104,6 +106,46 @@ public class Separadora
         
         sc.close();
         return v_textos;
+    }
+    
+    /**
+     * Extrae las 5 primeras palabras de cada documento/corpus
+     * En caso de que el texto NO tenga 5 palabras, devuelve todas las palabras que tenga el texto
+     * @param rutaFichero Es la ruta en la que se encuentra el fichero/corpus de Consultas que queremos leer
+     * @return Devuelve un Array con todos las 5 primeras palabras de cada texto del Fichero/Corpus de Consultas dado por parametro
+     */
+    public static ArrayList<String> obtener5PrimerasPalabras(String rutaFichero)
+    {
+        ArrayList<String> v_palabras = new ArrayList<>(); // Vector que contiene las primeras 5 palabras de cada texto
+        try
+        {
+            ArrayList<String> v_textos=obtenerTextosCorpus(rutaFichero);
+            for(int i=0; i<v_textos.size(); i++)
+            {
+                int longitud_texto=5; // Numero de palabras que queremos recorrer en cada texto
+                
+                String[] v_palabras_separadas = v_textos.get(i).split("[\\s]+(?=[^\\-])"); // Separamos las palabras del texto que tengan +1 entre ellas o tengan guiones
+                String v_palabras_limpias="";
+                
+                if(v_palabras_separadas.length < 5) // Si el texto tiene menos de 5 palabras, recorremos todas las palabras del texto
+                {
+                    longitud_texto=v_palabras_separadas.length;
+                }
+                
+                for(int j=0; j<longitud_texto; j++)
+                {
+                    String palabra_limpia = v_palabras_separadas[j].replaceAll("[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ]", ""); // Eliminamos los caracteres de la palabra que NO sean una letra o un numero
+                    v_palabras_limpias=v_palabras_limpias + " " + palabra_limpia;
+                }
+                // Añadimos las 5 palabras del texto 'i' al array 'v_palabras'
+                v_palabras.add(v_palabras_limpias);
+            }
+        } catch (FileNotFoundException ex)
+        {
+            Logger.getLogger(Separadora.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return v_palabras;
     }
 
 }
