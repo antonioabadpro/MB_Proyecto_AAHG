@@ -6,7 +6,12 @@ package practica;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -73,6 +78,45 @@ public class Fichero
             }
         }
         sc.close();
+    }
+    
+    /**
+     * Escribe un Fichero .txt en la misma ruta del proyecto con los documentos resultantes de cada Consulta realizada en el metodo 'consultar5Palabras()'
+     * @param v_resultado_consultas Array que contiene un array con los Documentos resultantes de cada Consulta realizada
+     * @param rutaConsultas Es la ruta en la que se encuentra el fichero/corpus de Consultas que queremos leer (MED.QRY)
+     */
+    public static void escribirFicheroConsultas(ArrayList<ArrayList<Documento>> v_resultado_consultas, String rutaConsultas)
+    {
+        String nomFichero = "consultas5Palabras.txt";
+        
+        try
+        {
+            FileWriter f=new FileWriter(nomFichero);
+            
+            ArrayList<String> texto_consulta = Separadora.obtener5PrimerasPalabras(rutaConsultas); // Para mostrar el texto de cada Consulta
+            
+            // Mostramos los Documentos resultado de cada Consulta realizada
+            for (int i = 0; i < v_resultado_consultas.size(); i++)
+            {
+                f.write("\n\n\t\t\t********** Consulta " + (i + 1) + ": " + texto_consulta.get(i) + " **********");
+                for (Documento d : v_resultado_consultas.get(i))
+                {
+                    f.write("\n\nDocumento " + d.getId() + ": ");
+                    f.write("\n\n" + d.getTexto());
+                }
+            }
+            
+            // Escribimos el fin el fichero (EOF)
+            f.write("EOF");
+            f.close(); // Cerramos el fichero
+            
+        } catch (IOException ex)
+        {
+            System.out.println("Error al crear el Fichero con nombre '" + nomFichero + "'");
+            Logger.getLogger(Fichero.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
     
 }

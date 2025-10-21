@@ -83,6 +83,9 @@ public class Principal
         }
     }
     
+    /**
+     * Segunda prueba realizada para la v0.2
+     */
     public static void mostrarDocumentosResultadosConsultas5Palabras()
     {
         String nomColeccion = "coleccionPrueba";
@@ -114,6 +117,28 @@ public class Principal
         }
     }
     
+    /**
+     * Prueba realizada para comprobar que la v0.2 funciona correctamente
+     */
+    public static void pruebaV02()
+    {
+        String nomColeccion = "coleccionPrueba";
+        String rutaConsultas = "MED.QRY";
+        
+        ArrayList<ArrayList<Documento>> v_resultado_consultas;
+        try
+        {
+            v_resultado_consultas = Solr.consultar5Palabras(nomColeccion, rutaConsultas);
+            Fichero.escribirFicheroConsultas(v_resultado_consultas, rutaConsultas);
+        } catch (SolrServerException ex)
+        {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public static void main(String[] args)
     {
         String coleccion_original = "miColeccion";
@@ -122,7 +147,7 @@ public class Principal
         String rutaConsultas = "MED.QRY";
         
         Principal.mostrarDocumentosResultadosConsultas5Palabras();
-        
+        Principal.pruebaV02();
     }
     
 }
