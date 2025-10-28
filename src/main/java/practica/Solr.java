@@ -12,6 +12,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
@@ -33,7 +34,7 @@ public class Solr
        HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
        SolrQuery consulta = new SolrQuery();
        
-       consulta.setRows(Integer.SIZE); // Hacemos que la consulta muestre todas las filas del documento
+       consulta.setRows(Integer.MAX_VALUE); // Hacemos que la consulta muestre todas las filas del documento
        consulta.setQuery("*:*");
        
        QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
@@ -108,7 +109,7 @@ public class Solr
        SolrQuery consulta = new SolrQuery();
        ArrayList<ArrayList<Documento>> v_resultado_consultas=new ArrayList<>();
        
-       consulta.setRows(Integer.SIZE); // Hacemos que la consulta muestre todas las filas del documento
+       consulta.setRows(Integer.MAX_VALUE); // Hacemos que la consulta muestre todas las filas del documento
        ArrayList<String> v_palabras = Separadora.obtener5PrimerasPalabras(rutaConsultas);
        
        // Realizamos la Consulta en cada Documento del Corpus
@@ -133,6 +134,42 @@ public class Solr
        }
        
        return v_resultado_consultas;
+    }
+    
+    /**
+     * Devuelve el resultado de todas las Consultas del Fichero/Corpus introducido por parametro (MED.QRY)
+     * @param nomColeccion Nombre de la Coleccion Solr sobre la que queremos realizar una consulta
+     * @throws SolrServerException Lanza una Excepcion en caso de que NO pueda conectarse con la coleccion de Solr
+     * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la consulta en la coleccion de Solr
+     * @return Devuelve una lista con los Documentos resultantes de cada Consulta realizada
+     */
+    public static ArrayList<SolrDocumentList> consultarDocumentosRanking(String nomColeccion, String rutaConsultas) throws SolrServerException, IOException
+    {
+       HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
+       SolrQuery consulta = new SolrQuery();
+       ArrayList<SolrDocumentList> v_listaDocumentos=new ArrayList<>();
+       
+       consulta.setRows(Integer.MAX_VALUE); // Hacemos que la consulta muestre todas las filas del documento
+       
+       // Obtenemos las consultas que queremos realizar (consultas del fichero MED.QRY)
+       ArrayList<String> v_palabras = Separadora.obtenerTextosCorpus(rutaConsultas);
+       
+       int contador=1;
+       // Realizamos la Consulta en cada Documento del Corpus
+       for(String texto_consulta : v_palabras)
+       {
+           String queryEscapada = "texto:" + ClientUtils.escapeQueryChars(texto_consulta);
+           consulta.setQuery(queryEscapada);
+           System.out.println("Consulta (" + contador + "): " + texto_consulta);
+           //consulta.setQuery("texto:" + texto_consulta);
+           QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
+           SolrDocumentList docs = rsp.getResults();
+           contador++; // CHIVATO
+           
+           v_listaDocumentos.add(docs);
+       }
+        
+       return v_listaDocumentos;
     }
     
 }

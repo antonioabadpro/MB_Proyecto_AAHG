@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 
 /**
  *
@@ -20,10 +22,8 @@ public class Principal
     /**
      * Primera prueba realizada para la v0.1
      */
-    public static void lecturaCorpus()
+    public static void lecturaCorpus(String rutaCorpus)
     {
-        String rutaCorpus = "MED.ALL";
-
         // Leemos el Fichero que nos dan 'MED.ALL'
         try
         { 
@@ -129,7 +129,30 @@ public class Principal
         try
         {
             v_resultado_consultas = Solr.consultar5Palabras(nomColeccion, rutaConsultas);
-            Fichero.escribirFicheroConsultas(v_resultado_consultas, rutaConsultas);
+            Fichero.escribirFicheroConsulta5Palabras(v_resultado_consultas, rutaConsultas);
+        } catch (SolrServerException ex)
+        {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /**
+     * Prueba realizada para comprobar que la v0.3 funciona correctamente
+     */
+    public static void pruebaV03()
+    {
+        String nomColeccion = "coleccionPrueba";
+        String rutaConsultas = "MED.QRY";
+        
+        ArrayList<SolrDocumentList> v_listaDocumentos;
+        try
+        {
+            v_listaDocumentos = Solr.consultarDocumentosRanking(nomColeccion, rutaConsultas);
+            Fichero.escribirFicheroConsultas(v_listaDocumentos, rutaConsultas);
+            
         } catch (SolrServerException ex)
         {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
@@ -146,8 +169,7 @@ public class Principal
         String nomColeccion = "coleccionPrueba";
         String rutaConsultas = "MED.QRY";
         
-        Principal.mostrarDocumentosResultadosConsultas5Palabras();
-        Principal.pruebaV02();
+        Principal.pruebaV03();
     }
     
 }

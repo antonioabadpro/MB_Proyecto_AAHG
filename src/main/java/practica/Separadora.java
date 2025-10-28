@@ -49,6 +49,38 @@ public class Separadora
     }
     
     /**
+    * Limpia una cadena de caracteres (String) eliminando los caracteres NO alfanuméricos
+    * Reduce múltiples espacios a un solo espacio y los espacios iniciales y finales.
+    * @param texto Texto original que queremos limpiar
+    * @return Devuelve el Texto limpio y bien formateado
+    */
+   public static String limpiarTexto(String texto)
+   {
+       String textoLimpio="";
+       
+       if (texto == null)
+       {
+           textoLimpio="";
+       }
+       else
+       {            
+            // Sustituir los guiones por un espacio
+            //textoLimpio = texto.replaceAll("[-–—−-]", " ");
+           textoLimpio = texto.replaceAll(" - ", "");
+            
+            // Reemplaza los saltos de linea por espacios
+            textoLimpio = texto.replaceAll("[\\r\\n]+", " ");
+            
+            // Eliminamos espacios duplicados que puedan haber quedado
+            textoLimpio = texto.replaceAll("\\s+", " ");
+
+            // Eliminamos espacios al inicio y al final
+            textoLimpio = texto.trim();
+       }
+       return textoLimpio;
+   }
+    
+    /**
      * Extrae el texto (.W) de cada documento del fichero/corpus
      * @param rutaFichero Es la ruta en la que se encuentra el fichero/corpus que queremos leer
      * @return Devuelve un Array con todos los textos de cada identificador del Fichero/Corpus dado por parametro
@@ -72,7 +104,7 @@ public class Separadora
                 // Si ya había un texto acumulado, lo guardamos
                 if (textoActual.isEmpty() == false)
                 {
-                    v_textos.add(textoActual.trim());
+                    v_textos.add(Separadora.limpiarTexto(textoActual.trim()));
                 }
                 
                 // Limpiamos la cadena de texto para el siguiente documento
@@ -92,7 +124,7 @@ public class Separadora
                         linea = linea.replaceFirst("^\\s+", ""); // Eliminamos los espacios al inicio de cada linea
                         linea = linea.replaceAll(" {2,}", " "); // Reemplaza todos los espacios múltiples (2 o más) por un solo espacio
 
-                        textoActual = textoActual + linea;
+                        textoActual = textoActual + linea + " ";
                     }
                 }   
             }  
@@ -101,7 +133,7 @@ public class Separadora
         // No olvidar el último documento
         if (textoActual.isEmpty() == false)
         {
-            v_textos.add(textoActual.trim());
+            v_textos.add(Separadora.limpiarTexto(textoActual.trim()));
         }
         
         sc.close();
@@ -124,7 +156,7 @@ public class Separadora
             {
                 int longitud_texto=5; // Numero de palabras que queremos recorrer en cada texto
                 
-                String[] v_palabras_separadas = v_textos.get(i).split("[\\s]+(?=[^\\-])"); // Separamos las palabras del texto que tengan +1 entre ellas o tengan guiones
+                String[] v_palabras_separadas = v_textos.get(i).split("[\\s]+(?=[^\\-])"); // Separamos las palabras del texto que tengan +1 espacio entre ellas o tengan guiones
                 String v_palabras_limpias="";
                 
                 if(v_palabras_separadas.length < 5) // Si el texto tiene menos de 5 palabras, recorremos todas las palabras del texto
