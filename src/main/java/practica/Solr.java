@@ -141,7 +141,7 @@ public class Solr
      * @param nomColeccion Nombre de la Coleccion Solr sobre la que queremos realizar una consulta
      * @throws SolrServerException Lanza una Excepcion en caso de que NO pueda conectarse con la coleccion de Solr
      * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la consulta en la coleccion de Solr
-     * @return Devuelve una lista con los Documentos resultantes de cada Consulta realizada
+     * @return Devuelve una Array que contiene listas con los Documentos resultantes de cada Consulta realizada
      */
     public static ArrayList<SolrDocumentList> consultarDocumentosRanking(String nomColeccion, String rutaConsultas) throws SolrServerException, IOException
     {
@@ -158,8 +158,10 @@ public class Solr
        // Realizamos la Consulta en cada Documento del Corpus
        for(String texto_consulta : v_palabras)
        {
-           String queryEscapada = "texto:" + ClientUtils.escapeQueryChars(texto_consulta);
+           // Filtramos el texto de cada consulta para que Solr sepa que cada palabra del String debe ir en el campo 'texto'
+           String queryEscapada = "texto:" + ClientUtils.escapeQueryChars(texto_consulta); // Elimina 
            consulta.setQuery(queryEscapada);
+           consulta.setFields("id", "ranking", "score");
            System.out.println("Consulta (" + contador + "): " + texto_consulta);
            //consulta.setQuery("texto:" + texto_consulta);
            QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
