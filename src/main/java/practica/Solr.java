@@ -159,14 +159,14 @@ public class Solr
        for(String texto_consulta : v_palabras)
        {
            // Filtramos el texto de cada consulta para que Solr sepa que cada palabra del String debe ir en el campo 'texto'
-           String queryEscapada = "texto:" + ClientUtils.escapeQueryChars(texto_consulta); // Elimina 
+           String queryEscapada = "texto:" + ClientUtils.escapeQueryChars(texto_consulta); // Elimina los caracteres innecesarios que hacen que NO me salgan los resultados para algunas consultas 
            consulta.setQuery(queryEscapada);
-           consulta.setFields("id", "ranking", "score");
-           System.out.println("Consulta (" + contador + "): " + texto_consulta);
-           //consulta.setQuery("texto:" + texto_consulta);
+           consulta.setFields("id", "score");
            QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
            SolrDocumentList docs = rsp.getResults();
-           contador++; // CHIVATO
+           // Comprobacion por consola
+           System.out.println("Consulta (" + contador + "): " + texto_consulta);
+           contador++;
            
            v_listaDocumentos.add(docs);
        }

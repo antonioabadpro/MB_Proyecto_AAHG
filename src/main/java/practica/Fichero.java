@@ -147,16 +147,19 @@ public class Fichero
             // Recorremos cada posicion del array que contiene las listas de Documentos
             for(SolrDocumentList listaDocumentos : v_listaDocumentos)
             {
+                int ranking=0;
                 // Mostramos los Documentos resultado de cada Consulta realizada
                 for (SolrDocument d : listaDocumentos)
                 {
                     f.printf("%-10s ", numConsulta);
                     f.printf("%-8s ", "Q0");
                     f.printf("%-10s ", d.getFieldValue("id"));
-                    f.printf("%-16s ", d.getFieldValue("ranking"));
+                    f.printf("%-16s ", ranking);
                     f.printf("%-16f ", d.getFieldValue("score"));
                     f.printf("%-16s ", "AAHG");
                     f.write("\n");
+                    
+                    ranking++;
                 }
                 numConsulta++;
             }
