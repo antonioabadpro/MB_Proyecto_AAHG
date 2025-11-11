@@ -103,11 +103,11 @@ public class Solr
      * @throws SolrServerException Lanza una Excepcion en caso de que NO pueda conectarse con la coleccion de Solr
      * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la indexacion de la coleccion de Solr
      */
-    public static ArrayList<ArrayList<Documento>> consultar5Palabras(String nomColeccion, String rutaConsultas) throws SolrServerException, IOException
+    public static ArrayList<SolrDocumentList> consultar5Palabras(String nomColeccion, String rutaConsultas) throws SolrServerException, IOException
     {
        HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
        SolrQuery consulta = new SolrQuery();
-       ArrayList<ArrayList<Documento>> v_resultado_consultas=new ArrayList<>();
+       ArrayList<SolrDocumentList> v_resultado_consultas = new ArrayList<>(); // Creamos un array que contiene los documentos respuesta de cada Consulta
        
        consulta.setRows(Integer.MAX_VALUE); // Hacemos que la consulta muestre todas las filas del documento
        ArrayList<String> v_palabras = Separadora.obtener5PrimerasPalabras(rutaConsultas);
@@ -115,22 +115,13 @@ public class Solr
        // Realizamos la Consulta en cada Documento del Corpus
        for(String texto_consulta: v_palabras)
        {
-           consulta.setQuery("texto:" + texto_consulta);
+           // Filtramos el texto de cada consulta para que Solr sepa que cada palabra del String debe ir en el campo 'texto'
+           String queryEscapada = "texto:" + ClientUtils.escapeQueryChars(texto_consulta); // Elimina los caracteres innecesarios que hacen que NO me salgan los resultados para algunas consultas 
+           consulta.setQuery(queryEscapada);
            QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
            SolrDocumentList docs = rsp.getResults();
            
-           ArrayList<Documento> documentos_consulta = new ArrayList<>(); // Creamos un array que contiene los documentos respuesta de cada Consulta
-           
-           // Recorremos cada Documento devuelto para la Consulta y almacenamos los resultados en un array
-           for (SolrDocument doc: docs)
-           {
-               int id_doc=Integer.parseInt(doc.getFieldValue("id").toString());
-               String texto_doc = doc.getFieldValue("texto").toString();
-               // Creamos el nuevo documento con los datos devueltos en la Consulta
-               Documento d=new Documento(id_doc, texto_doc);
-               documentos_consulta.add(d);
-           }
-           v_resultado_consultas.add(documentos_consulta);
+           v_resultado_consultas.add(docs);
        }
        
        return v_resultado_consultas;

@@ -64,18 +64,17 @@ public class Separadora
        }
        else
        {            
-            // Sustituir los guiones por un espacio
-            //textoLimpio = texto.replaceAll("[-–—−-]", " ");
+           // Sustituir los guiones por un espacio
            textoLimpio = texto.replaceAll(" - ", "");
             
-            // Reemplaza los saltos de linea por espacios
-            textoLimpio = texto.replaceAll("[\\r\\n]+", " ");
+           // Reemplaza los saltos de linea por espacios
+           textoLimpio = texto.replaceAll("[\\r\\n]+", " ");
             
-            // Eliminamos espacios duplicados que puedan haber quedado
-            textoLimpio = texto.replaceAll("\\s+", " ");
+           // Eliminamos espacios duplicados que puedan haber quedado
+           textoLimpio = texto.replaceAll("\\s+", " ");
 
-            // Eliminamos espacios al inicio y al final
-            textoLimpio = texto.trim();
+           // Eliminamos espacios al inicio y al final
+           textoLimpio = texto.trim();
        }
        return textoLimpio;
    }

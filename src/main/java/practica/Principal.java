@@ -94,17 +94,17 @@ public class Principal
         try
         {
             ArrayList<String> texto_consulta = Separadora.obtener5PrimerasPalabras(rutaConsultas); // Para mostrar el texto de cada Consulta
-            ArrayList<ArrayList<Documento>> v_resultado_consultas=new ArrayList<>();
-            v_resultado_consultas=Solr.consultar5Palabras(nomColeccion, rutaConsultas);
+            ArrayList<SolrDocumentList> v_listaDocumentos_consulta=new ArrayList<>();
+            v_listaDocumentos_consulta=Solr.consultar5Palabras(nomColeccion, rutaConsultas);
             
             // Mostramos los Documentos resultado de cada Consulta realizada
-            for (int i = 0; i < v_resultado_consultas.size(); i++)
+            for (int i = 0; i < v_listaDocumentos_consulta.size(); i++)
             {
                 System.out.println("\n\n\t\t\t********** Consulta " + (i + 1) + ": " + texto_consulta.get(i) + " **********");
-                for (Documento d : v_resultado_consultas.get(i))
+                for (SolrDocument d : v_listaDocumentos_consulta.get(i))
                 {
-                    System.out.println("\nDocumento " + d.getId() + ": ");
-                    System.out.println(d.getTexto());
+                    System.out.println("\nDocumento " + d.getFieldValue("id") + ": ");
+                    System.out.println(d.getFieldValue("texto"));
                 }
             }
 
@@ -125,7 +125,7 @@ public class Principal
         String nomColeccion = "coleccionPrueba";
         String rutaConsultas = "MED.QRY";
         
-        ArrayList<ArrayList<Documento>> v_resultado_consultas;
+        ArrayList<SolrDocumentList> v_resultado_consultas;
         try
         {
             v_resultado_consultas = Solr.consultar5Palabras(nomColeccion, rutaConsultas);
@@ -169,7 +169,7 @@ public class Principal
         String nomColeccion = "coleccionPrueba";
         String rutaConsultas = "MED.QRY";
         
-        Principal.pruebaV03();
+        Principal.pruebaV02();
     }
     
 }

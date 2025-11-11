@@ -88,7 +88,7 @@ public class Fichero
      * @param v_resultado_consultas Array que contiene un array con los Documentos resultantes de cada Consulta realizada
      * @param rutaConsultas Es la ruta en la que se encuentra el fichero/corpus de Consultas que queremos leer (MED.QRY)
      */
-    public static void escribirFicheroConsulta5Palabras(ArrayList<ArrayList<Documento>> v_resultado_consultas, String rutaConsultas)
+    public static void escribirFicheroConsulta5Palabras(ArrayList<SolrDocumentList> v_resultado_consultas, String rutaConsultas)
     {
         String nomFichero = "consultas5Palabras.txt";
         
@@ -102,15 +102,14 @@ public class Fichero
             for (int i = 0; i < v_resultado_consultas.size(); i++)
             {
                 f.write("\n\n\t\t\t********** Consulta " + (i + 1) + ": " + texto_consulta.get(i) + " **********");
-                for (Documento d : v_resultado_consultas.get(i))
+                for (SolrDocument d : v_resultado_consultas.get(i))
                 {
-                    f.write("\n\nDocumento " + d.getId() + ": ");
-                    f.write("\n\n" + d.getTexto());
+                    f.write("\n\nDocumento " + d.getFieldValue("id") + ": ");
+                    f.write("\n\n" + d.getFieldValue("texto"));
                 }
             }
             
-            // Escribimos el fin el fichero (EOF)
-            f.write("EOF");
+            f.write("EOF"); // Escribimos el fin el fichero (EOF
             f.close(); // Cerramos el fichero
             
         } catch (IOException ex)
