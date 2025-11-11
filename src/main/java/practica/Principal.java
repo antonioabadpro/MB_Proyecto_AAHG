@@ -4,6 +4,7 @@
  */
 package practica;
 
+import gui.VistaBuscador;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -162,6 +163,13 @@ public class Principal
         }
     }
     
+    public static void pruebaBuscadorVisual()
+    {
+        VistaBuscador v = new VistaBuscador();
+        v.setTitle("Antonio Abad Hernandez Galvez -> Proyecto MB (Buscador Solr)");
+        v.setVisible(true);
+    }
+    
     public static void main(String[] args)
     {
         String coleccion_original = "miColeccion";
@@ -169,7 +177,7 @@ public class Principal
         String nomColeccion = "coleccionPrueba";
         String rutaConsultas = "MED.QRY";
         
-        Principal.pruebaV02();
+        Principal.pruebaBuscadorVisual();
     }
     
 }

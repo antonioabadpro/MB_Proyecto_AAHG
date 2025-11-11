@@ -1,5 +1,7 @@
 practica\Principal.class
-practica\Documento.class
+gui\VistaBuscador$2.class
+gui\VistaBuscador$1.class
+practica\Separadora.class
 practica\Solr.class
 practica\Fichero.class
-practica\Separadora.class
+gui\VistaBuscador.class

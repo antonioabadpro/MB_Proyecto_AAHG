@@ -130,6 +130,7 @@ public class Solr
     /**
      * Devuelve el resultado de todas las Consultas del Fichero/Corpus introducido por parametro (MED.QRY)
      * @param nomColeccion Nombre de la Coleccion Solr sobre la que queremos realizar una consulta
+     * @param rutaConsultas Ruta del fichero en la que se encuentran los textos de las consultas que queremos realizar
      * @throws SolrServerException Lanza una Excepcion en caso de que NO pueda conectarse con la coleccion de Solr
      * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la consulta en la coleccion de Solr
      * @return Devuelve una Array que contiene listas con los Documentos resultantes de cada Consulta realizada
@@ -163,6 +164,35 @@ public class Solr
        }
         
        return v_listaDocumentos;
+    }
+    
+    /**
+     * Devuelve el resultado de todas las Consultas del Fichero/Corpus introducido por parametro (MED.QRY)
+     * @param nomColeccion Nombre de la Coleccion Solr sobre la que queremos realizar una consulta
+     * @param rutaConsultas Ruta del fichero en la que se encuentran los textos de las consultas que queremos realizar
+     * @throws SolrServerException Lanza una Excepcion en caso de que NO pueda conectarse con la coleccion de Solr
+     * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la consulta en la coleccion de Solr
+     * @return Devuelve una lista con los Documentos resultantes de la Consulta realizada
+     */
+    public static SolrDocumentList realizarConsultaVisual(String nomColeccion, String texto_consulta, String campoBusqueda) throws SolrServerException, IOException
+    {
+       HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
+       SolrQuery consulta = new SolrQuery();
+       
+       if(texto_consulta == null || texto_consulta.isEmpty())
+       {
+           texto_consulta = "*";
+       }
+       
+       consulta.setRows(Integer.MAX_VALUE); // Hacemos que la consulta muestre todas las filas del documento
+
+       // Filtramos el texto de cada consulta para que Solr sepa que cada palabra del String debe ir en el campo 'texto'
+       String queryEscapada = campoBusqueda + ":" + ClientUtils.escapeQueryChars(texto_consulta); // Elimina los caracteres innecesarios que hacen que NO me salgan los resultados para algunas consultas 
+       consulta.setQuery(queryEscapada);
+       QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
+       SolrDocumentList docs = rsp.getResults();
+        
+       return docs;
     }
     
 }
