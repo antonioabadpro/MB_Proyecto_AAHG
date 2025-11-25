@@ -167,6 +167,7 @@ public class Principal
     {
         VistaBuscador v = new VistaBuscador();
         v.setTitle("Antonio Abad Hernandez Galvez -> Proyecto MB (Buscador Solr)");
+        v.setLocationRelativeTo(null); // Coloca el JFrame en el centro de la pantalla
         v.setVisible(true);
     }
     

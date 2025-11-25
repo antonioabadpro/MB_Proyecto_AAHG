@@ -22,8 +22,16 @@ public class VistaBuscador extends javax.swing.JFrame {
      * Creates new form VistaBuscador
      */
     public VistaBuscador() {
-        setSize(getWidth(), getHeight());
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH); // Ajustamos el JFrame al tamaño de la pantalla
+        setResizable(false); // Hacemos que el JFrame NO pueda cambiar su tamaño
+        
         initComponents();
+        // Formateo el Area de Texto para que se vea bien
+        this.jTextArea_resultadoConsulta.setWrapStyleWord(true);
+        this.jTextArea_resultadoConsulta.setLineWrap(true);
+        this.jTextArea_resultadoConsulta.setEditable(false);
+        this.jTextArea_resultadoConsulta.setMargin(new java.awt.Insets(10, 10, 10, 10));
+
     }
 
     /**
@@ -35,16 +43,38 @@ public class VistaBuscador extends javax.swing.JFrame {
 
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jPopupMenu2 = new javax.swing.JPopupMenu();
-        jComboBox_campoBusqueda = new javax.swing.JComboBox<>();
+        jPanel = new javax.swing.JPanel();
         jButton_buscar = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea_resultadoConsulta = new javax.swing.JTextArea();
-        jTextField_textoConsulta = new javax.swing.JTextField();
         jLabel_titulo = new javax.swing.JLabel();
+        jTextField_textoConsulta = new javax.swing.JTextField();
+        jComboBox_campoBusqueda = new javax.swing.JComboBox<>();
         jTextField_nomColeccion = new javax.swing.JTextField();
         jLabel_coleccion = new javax.swing.JLabel();
+        jLabel_error = new javax.swing.JLabel();
+        jScrollPane_resultadoConsulta = new javax.swing.JScrollPane();
+        jTextArea_resultadoConsulta = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jButton_buscar.setText("Buscar");
+        jButton_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_buscarActionPerformed(evt);
+            }
+        });
+
+        jLabel_titulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel_titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel_titulo.setText("Buscador Solr");
+        jLabel_titulo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jLabel_titulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jTextField_textoConsulta.setToolTipText("Texto de la Consulta");
+        jTextField_textoConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField_textoConsultaActionPerformed(evt);
+            }
+        });
 
         jComboBox_campoBusqueda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "id", "texto" }));
         jComboBox_campoBusqueda.setSelectedIndex(1);
@@ -55,75 +85,76 @@ public class VistaBuscador extends javax.swing.JFrame {
             }
         });
 
-        jButton_buscar.setText("Buscar");
-        jButton_buscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton_buscarActionPerformed(evt);
-            }
-        });
-
-        jTextArea_resultadoConsulta.setColumns(20);
-        jTextArea_resultadoConsulta.setRows(5);
-        jScrollPane1.setViewportView(jTextArea_resultadoConsulta);
-
-        jTextField_textoConsulta.setToolTipText("Texto de la Consulta");
-
-        jLabel_titulo.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel_titulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel_titulo.setText("Buscador Solr");
-        jLabel_titulo.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jLabel_titulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
         jTextField_nomColeccion.setText("coleccionPrueba");
 
         jLabel_coleccion.setText("Colección:");
+
+        jLabel_error.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel_error.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        jTextArea_resultadoConsulta.setColumns(20);
+        jTextArea_resultadoConsulta.setRows(5);
+        jScrollPane_resultadoConsulta.setViewportView(jTextArea_resultadoConsulta);
+
+        javax.swing.GroupLayout jPanelLayout = new javax.swing.GroupLayout(jPanel);
+        jPanel.setLayout(jPanelLayout);
+        jPanelLayout.setHorizontalGroup(
+            jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel_titulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel_error, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanelLayout.createSequentialGroup()
+                .addComponent(jLabel_coleccion)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField_nomColeccion, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jComboBox_campoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jTextField_textoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(36, 36, 36)
+                .addComponent(jButton_buscar)
+                .addGap(0, 114, Short.MAX_VALUE))
+            .addComponent(jScrollPane_resultadoConsulta)
+        );
+        jPanelLayout.setVerticalGroup(
+            jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLayout.createSequentialGroup()
+                .addComponent(jLabel_titulo)
+                .addGap(18, 18, 18)
+                .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextField_textoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox_campoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextField_nomColeccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton_buscar))
+                    .addComponent(jLabel_coleccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel_error, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane_resultadoConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel_titulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel_coleccion)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jTextField_nomColeccion, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(114, 114, 114)
-                                .addComponent(jComboBox_campoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jTextField_textoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jButton_buscar)
-                                .addGap(0, 231, Short.MAX_VALUE)))))
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(jPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel_titulo)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField_textoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton_buscar)
-                    .addComponent(jComboBox_campoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField_nomColeccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel_coleccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void jComboBox_campoBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_campoBusquedaActionPerformed
-        this.jButton_buscar.doClick(); // Para que cuando pulsemos ENTER en 'campoBusqueda' se pulse el boton 'Buscar'
+        
     }//GEN-LAST:event_jComboBox_campoBusquedaActionPerformed
 
     private void jButton_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_buscarActionPerformed
@@ -134,17 +165,32 @@ public class VistaBuscador extends javax.swing.JFrame {
         String textoConsulta = this.jTextField_textoConsulta.getText();
         String campoBusqueda = this.jComboBox_campoBusqueda.getSelectedItem().toString();
         
+        this.jLabel_error.setText("");
+        
         SolrDocumentList listaDocumentos = new SolrDocumentList();
         try
         {
             listaDocumentos = Solr.realizarConsultaVisual(nomColeccion, textoConsulta, campoBusqueda);
             
-            for (SolrDocument d : listaDocumentos)
+            if(listaDocumentos.isEmpty() == true) // Si NO hay ningun Documento, mostramos un mensaje de error
             {
-                salida.append(String.format("\n\nDocumento " + d.getFieldValue("id") + ": "));
-                salida.append(String.format("\n\n" + d.getFieldValue("texto")));
+                this.jLabel_error.setText("NO se ha encontrado ningún documento para la consulta realizada");
+                this.jTextArea_resultadoConsulta.setText("");
+            }
+            else // Si hay Documentos, los mostramos
+            {
+                int numDocumentos = listaDocumentos.size();
                 
-                this.jTextArea_resultadoConsulta.setText(salida.toString());
+                salida.append("Se han recuperado un total de ").append(numDocumentos).append(" documentos");
+                
+                for (SolrDocument d : listaDocumentos)
+                {
+                    salida.append("\n\nDocumento ").append(d.getFieldValue("id")).append(": ");
+                    salida.append("\n\n").append(d.getFieldValue("texto"));
+
+                    this.jTextArea_resultadoConsulta.setText(salida.toString());
+                    this.jTextArea_resultadoConsulta.setCaretPosition(0); // Posiciono el Scroll al inicio
+                }
             }
         }
         catch (SolrServerException ex)
@@ -155,18 +201,22 @@ public class VistaBuscador extends javax.swing.JFrame {
         {
             Logger.getLogger(VistaBuscador.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
     }//GEN-LAST:event_jButton_buscarActionPerformed
+
+    private void jTextField_textoConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_textoConsultaActionPerformed
+        this.jButton_buscar.doClick(); // Para que cuando pulsemos ENTER en 'campoBusqueda' se pulse el boton 'Buscar'
+    }//GEN-LAST:event_jTextField_textoConsultaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton jButton_buscar;
     public javax.swing.JComboBox<String> jComboBox_campoBusqueda;
     private javax.swing.JLabel jLabel_coleccion;
+    private javax.swing.JLabel jLabel_error;
     public javax.swing.JLabel jLabel_titulo;
+    private javax.swing.JPanel jPanel;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JPopupMenu jPopupMenu2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane_resultadoConsulta;
     public javax.swing.JTextArea jTextArea_resultadoConsulta;
     public javax.swing.JTextField jTextField_nomColeccion;
     public javax.swing.JTextField jTextField_textoConsulta;

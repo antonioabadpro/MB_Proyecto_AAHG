@@ -174,23 +174,35 @@ public class Solr
      * @throws IOException Lanza una Excepcion en caso de que NO pueda realizar la consulta en la coleccion de Solr
      * @return Devuelve una lista con los Documentos resultantes de la Consulta realizada
      */
-    public static SolrDocumentList realizarConsultaVisual(String nomColeccion, String texto_consulta, String campoBusqueda) throws SolrServerException, IOException
+    public static SolrDocumentList realizarConsultaVisual(String nomColeccion, String textoConsulta, String campoBusqueda) throws SolrServerException, IOException
     {
        HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
        SolrQuery consulta = new SolrQuery();
        
-       if(texto_consulta == null || texto_consulta.isEmpty())
+       consulta.setRows(Integer.MAX_VALUE); // Hacemos que la consulta muestre todas las filas del documento
+       
+       if (textoConsulta == null || textoConsulta.isEmpty())
        {
-           texto_consulta = "*";
+           consulta.setQuery(campoBusqueda + ":*");
+       }
+       else
+       {
+           // Filtramos el texto de cada consulta para que Solr sepa que cada palabra del String debe ir en el campo 'texto'
+           String queryEscapada = campoBusqueda + ":" + ClientUtils.escapeQueryChars(textoConsulta); // Elimina los caracteres innecesarios que hacen que NO me salgan los resultados para algunas consultas 
+           consulta.setQuery(queryEscapada);
        }
        
-       consulta.setRows(Integer.MAX_VALUE); // Hacemos que la consulta muestre todas las filas del documento
+       System.out.println("textoConsulta: " + textoConsulta);
+       System.out.println("campoBusqueda: " + campoBusqueda);
 
-       // Filtramos el texto de cada consulta para que Solr sepa que cada palabra del String debe ir en el campo 'texto'
-       String queryEscapada = campoBusqueda + ":" + ClientUtils.escapeQueryChars(texto_consulta); // Elimina los caracteres innecesarios que hacen que NO me salgan los resultados para algunas consultas 
-       consulta.setQuery(queryEscapada);
        QueryResponse rsp = solr.query(consulta); // Devuelve la respuesta a la consulta que hemos realizado sobre la coleccion de la BD
        SolrDocumentList docs = rsp.getResults();
+       
+       System.out.println("Listado de Documentos:\n");
+       for(SolrDocument d: docs)
+       {
+           System.out.println("id: " + d.getFieldValue("id"));
+       }
         
        return docs;
     }
