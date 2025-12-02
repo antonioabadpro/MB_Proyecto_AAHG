@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui;
 
 import java.io.IOException;
@@ -85,7 +81,7 @@ public class VistaBuscador extends javax.swing.JFrame {
             }
         });
 
-        jTextField_nomColeccion.setText("coleccionPrueba");
+        jTextField_nomColeccion.setText("coleccionMejorada");
 
         jLabel_coleccion.setText("Colección:");
 
@@ -211,7 +207,7 @@ public class VistaBuscador extends javax.swing.JFrame {
     public javax.swing.JButton jButton_buscar;
     public javax.swing.JComboBox<String> jComboBox_campoBusqueda;
     private javax.swing.JLabel jLabel_coleccion;
-    private javax.swing.JLabel jLabel_error;
+    public javax.swing.JLabel jLabel_error;
     public javax.swing.JLabel jLabel_titulo;
     private javax.swing.JPanel jPanel;
     private javax.swing.JPopupMenu jPopupMenu1;

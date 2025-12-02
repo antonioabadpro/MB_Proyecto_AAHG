@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package practica;
 
 import gui.VistaBuscador;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -20,6 +15,10 @@ import org.apache.solr.common.SolrDocumentList;
  */
 public class Principal
 {
+    // Variables Globales
+    public static String nomColeccion = "coleccionMejorada";
+    public static String rutaConsultas = "MED.QRY";
+    public static String rutaCorpus = "MED.ALL";
     /**
      * Primera prueba realizada para la v0.1
      */
@@ -48,12 +47,27 @@ public class Principal
      */
     public static void pruebaV01()
     {
-        String nomColeccion = "coleccionPrueba";
-        String rutaCorpus = "MED.ALL";
-        
         // Indexamos el Corpus en la Coleccion -> v0.1
         try
         {
+            Solr.indexarDocumentos(rutaCorpus, nomColeccion);
+        } catch (SolrServerException ex)
+        {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex)
+        {
+            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /**
+     * Prueba realizada para reindexar los documentos de la coleccion en Solr
+     */
+    public static void reindexarDocumentos()
+    {
+        try
+        {
+            Solr.eliminarTodosDocumentos(nomColeccion);
             Solr.indexarDocumentos(rutaCorpus, nomColeccion);
         } catch (SolrServerException ex)
         {
@@ -69,8 +83,6 @@ public class Principal
      */
     public static void lecturaPalabrasConsultas()
     {
-        String rutaConsultas = "MED.QRY";
-        
         try
         {
             ArrayList<String> v_palabras=Separadora.obtener5PrimerasPalabras(rutaConsultas);
@@ -89,9 +101,6 @@ public class Principal
      */
     public static void mostrarDocumentosResultadosConsultas5Palabras()
     {
-        String nomColeccion = "coleccionPrueba";
-        String rutaConsultas = "MED.QRY";
-        
         try
         {
             ArrayList<String> texto_consulta = Separadora.obtener5PrimerasPalabras(rutaConsultas); // Para mostrar el texto de cada Consulta
@@ -109,7 +118,7 @@ public class Principal
                 }
             }
 
-        } catch (SolrServerException ex)
+        }catch (SolrServerException ex)
         {
             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex)
@@ -123,9 +132,6 @@ public class Principal
      */
     public static void pruebaV02()
     {
-        String nomColeccion = "coleccionPrueba";
-        String rutaConsultas = "MED.QRY";
-        
         ArrayList<SolrDocumentList> v_resultado_consultas;
         try
         {
@@ -145,9 +151,6 @@ public class Principal
      */
     public static void pruebaV03()
     {
-        String nomColeccion = "coleccionPrueba";
-        String rutaConsultas = "MED.QRY";
-        
         ArrayList<SolrDocumentList> v_listaDocumentos;
         try
         {
@@ -173,12 +176,8 @@ public class Principal
     
     public static void main(String[] args)
     {
-        String coleccion_original = "miColeccion";
-        String rutaCorpus = "MED.ALL";
-        String nomColeccion = "coleccionPrueba";
-        String rutaConsultas = "MED.QRY";
-        
+        //Principal.reindexarDocumentos();
+        //Principal.pruebaV03();
         Principal.pruebaBuscadorVisual();
-    }
-    
-}
+    }  
+};

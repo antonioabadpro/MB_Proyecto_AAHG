@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package practica;
 
 import java.io.IOException;
@@ -54,7 +50,7 @@ public class Solr
     public static void eliminarTodosDocumentos(String nomColeccion) throws SolrServerException, IOException
     {
         // Preparamos el Cliente Solr
-        String rutaServidorSolr = "http://localhost:8983/Solr/" + nomColeccion; 
+        String rutaServidorSolr = "http://localhost:8983/solr/" + nomColeccion; 
         SolrClient cliente = new HttpSolrClient.Builder(rutaServidorSolr).build();
 
         // Preparando el Documento Solr
@@ -140,8 +136,9 @@ public class Solr
        HttpSolrClient solr = new HttpSolrClient.Builder("http://localhost:8983/solr/" + nomColeccion).build();
        SolrQuery consulta = new SolrQuery();
        ArrayList<SolrDocumentList> v_listaDocumentos=new ArrayList<>();
+       int numDocumentosDevueltos = Integer.MAX_VALUE;
        
-       consulta.setRows(Integer.MAX_VALUE); // Hacemos que la consulta muestre todas las filas del documento
+       consulta.setRows(numDocumentosDevueltos); // Hacemos que la consulta muestre todas las filas del documento
        
        // Obtenemos las consultas que queremos realizar (consultas del fichero MED.QRY)
        ArrayList<String> v_palabras = Separadora.obtenerTextosCorpus(rutaConsultas);
