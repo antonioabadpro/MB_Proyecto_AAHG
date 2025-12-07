@@ -17,5 +17,10 @@
             <artifactId>solr-solrj</artifactId>
             <version>9.9.0</version>
         </dependency>
+        <dependency> <!-- https://mvnrepository.com/artifact/org.json/json -->
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20250517</version>
+        </dependency>
     </dependencies>
 </project>

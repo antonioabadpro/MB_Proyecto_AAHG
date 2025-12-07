@@ -7,6 +7,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import practica.Solr;
+import rag.ConsultaRag;
 
 /**
  *
@@ -22,11 +23,18 @@ public class VistaBuscador extends javax.swing.JFrame {
         setResizable(false); // Hacemos que el JFrame NO pueda cambiar su tamaño
         
         initComponents();
-        // Formateo el Area de Texto para que se vea bien
+        // Formateo el Area de Texto de la Consulta en Solr para que se vea bien
         this.jTextArea_resultadoConsulta.setWrapStyleWord(true);
         this.jTextArea_resultadoConsulta.setLineWrap(true);
         this.jTextArea_resultadoConsulta.setEditable(false);
         this.jTextArea_resultadoConsulta.setMargin(new java.awt.Insets(10, 10, 10, 10));
+        this.jTextArea_resultadoConsulta.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
+        // Formateo el Area de Texto de la Consulta en la IA para que se vea bien
+        this.jTextArea_respuestaIA.setWrapStyleWord(true);
+        this.jTextArea_respuestaIA.setLineWrap(true);
+        this.jTextArea_respuestaIA.setEditable(false);
+        this.jTextArea_respuestaIA.setMargin(new java.awt.Insets(10, 10, 10, 10));
+        this.jTextArea_respuestaIA.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 14));
 
     }
 
@@ -49,6 +57,10 @@ public class VistaBuscador extends javax.swing.JFrame {
         jLabel_error = new javax.swing.JLabel();
         jScrollPane_resultadoConsulta = new javax.swing.JScrollPane();
         jTextArea_resultadoConsulta = new javax.swing.JTextArea();
+        jScrollPane_respuestaIA = new javax.swing.JScrollPane();
+        jTextArea_respuestaIA = new javax.swing.JTextArea();
+        jLabel_textoRespuestaIA = new javax.swing.JLabel();
+        jLabel_textoRespuesta = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -92,41 +104,68 @@ public class VistaBuscador extends javax.swing.JFrame {
         jTextArea_resultadoConsulta.setRows(5);
         jScrollPane_resultadoConsulta.setViewportView(jTextArea_resultadoConsulta);
 
+        jTextArea_respuestaIA.setColumns(20);
+        jTextArea_respuestaIA.setRows(5);
+        jScrollPane_respuestaIA.setViewportView(jTextArea_respuestaIA);
+
+        jLabel_textoRespuestaIA.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel_textoRespuestaIA.setText("Respuesta generada por IA:");
+
+        jLabel_textoRespuesta.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jLabel_textoRespuesta.setText("Respuesta:");
+
         javax.swing.GroupLayout jPanelLayout = new javax.swing.GroupLayout(jPanel);
         jPanel.setLayout(jPanelLayout);
         jPanelLayout.setHorizontalGroup(
             jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel_titulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel_error, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanelLayout.createSequentialGroup()
-                .addComponent(jLabel_coleccion)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jTextField_nomColeccion, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jComboBox_campoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jTextField_textoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addComponent(jButton_buscar)
-                .addGap(0, 114, Short.MAX_VALUE))
-            .addComponent(jScrollPane_resultadoConsulta)
+                .addContainerGap()
+                .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane_resultadoConsulta)
+                    .addGroup(jPanelLayout.createSequentialGroup()
+                        .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel_textoRespuesta)
+                            .addGroup(jPanelLayout.createSequentialGroup()
+                                .addComponent(jLabel_coleccion)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField_nomColeccion, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jComboBox_campoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jTextField_textoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 760, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36)
+                                .addComponent(jButton_buscar))
+                            .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLayout.createSequentialGroup()
+                                    .addComponent(jLabel_textoRespuestaIA)
+                                    .addGap(1107, 1107, 1107))
+                                .addComponent(jScrollPane_respuestaIA, javax.swing.GroupLayout.PREFERRED_SIZE, 1282, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel_error, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         jPanelLayout.setVerticalGroup(
             jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLayout.createSequentialGroup()
                 .addComponent(jLabel_titulo)
                 .addGap(18, 18, 18)
-                .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField_textoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox_campoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField_nomColeccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton_buscar))
+                .addGroup(jPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_textoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox_campoBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField_nomColeccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_buscar)
                     .addComponent(jLabel_coleccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel_error, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel_textoRespuestaIA)
+                .addGap(12, 12, 12)
+                .addComponent(jScrollPane_respuestaIA, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane_resultadoConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE))
+                .addComponent(jLabel_textoRespuesta)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane_resultadoConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -140,10 +179,10 @@ public class VistaBuscador extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -155,7 +194,8 @@ public class VistaBuscador extends javax.swing.JFrame {
 
     private void jButton_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_buscarActionPerformed
         
-        StringBuilder salida=new StringBuilder(); // Salida de la Consola que ahora mostramos en el Frame
+        StringBuilder salida = new StringBuilder(); 
+        StringBuilder contextoIA = new StringBuilder();
         
         String nomColeccion = this.jTextField_nomColeccion.getText();
         String textoConsulta = this.jTextField_textoConsulta.getText();
@@ -163,39 +203,66 @@ public class VistaBuscador extends javax.swing.JFrame {
         
         this.jLabel_error.setText("");
         
+        // 1. Limpieza inicial de la UI
+        if (this.jTextArea_respuestaIA != null)
+        {
+            this.jTextArea_respuestaIA.setText(""); 
+        }
+
         SolrDocumentList listaDocumentos = new SolrDocumentList();
+        
         try
         {
+            // Busqueda en Solr
             listaDocumentos = Solr.realizarConsultaVisual(nomColeccion, textoConsulta, campoBusqueda);
             
-            if(listaDocumentos.isEmpty() == true) // Si NO hay ningun Documento, mostramos un mensaje de error
+            if (listaDocumentos.isEmpty() == true) // Si NO hay ningun Documento, mostramos un mensaje de error
             {
-                this.jLabel_error.setText("NO se ha encontrado ningún documento para la consulta realizada");
+                this.jLabel_error.setText("NO se ha encontrado ningún documento.");
                 this.jTextArea_resultadoConsulta.setText("");
+                this.jTextArea_respuestaIA.setText("");
             }
             else // Si hay Documentos, los mostramos
             {
-                int numDocumentos = listaDocumentos.size();
-                
-                salida.append("Se han recuperado un total de ").append(numDocumentos).append(" documentos");
+                int numDocumentosSolr = listaDocumentos.size();
+                int numDocumentosIA = 0;
+                salida.append("Se han recuperado un total de ").append(numDocumentosSolr).append(" documentos");
                 
                 for (SolrDocument d : listaDocumentos)
                 {
-                    salida.append("\n\nDocumento ").append(d.getFieldValue("id")).append(": ");
-                    salida.append("\n\n").append(d.getFieldValue("texto"));
-
+                    String id = (String) d.getFieldValue("id");
+                    String texto = (String) d.getFieldValue("texto");
+                    
+                    // Visualización Solr
+                    salida.append("\n\nDocumento ").append(id).append(": ");
+                    salida.append("\n\n").append(texto);
+                    
                     this.jTextArea_resultadoConsulta.setText(salida.toString());
                     this.jTextArea_resultadoConsulta.setCaretPosition(0); // Posiciono el Scroll al inicio
+
+                    // Construccion del contexto para IA (Maximo 3 docs)
+                    if (numDocumentosIA < 20 && texto != null)
+                    {
+                        contextoIA.append("\n\nDocumento ").append(id).append(": ");
+                        contextoIA.append("\n\n").append(texto);
+                        
+                        numDocumentosIA++;
+                    }
+                }
+
+                // Llamada a la IA
+                if (this.jTextArea_respuestaIA != null)
+                {
+                    this.jTextArea_respuestaIA.setText("Consultando a Gemma... Por favor espere.");
+                    
+                    ConsultaRag rag = new ConsultaRag(textoConsulta, contextoIA.toString(), this.jTextArea_respuestaIA);
+                    rag.execute(); // Arrancamos el hilo secundario
                 }
             }
-        }
-        catch (SolrServerException ex)
+        }catch (SolrServerException | IOException ex)
         {
             Logger.getLogger(VistaBuscador.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (IOException ex)
-        {
-            Logger.getLogger(VistaBuscador.class.getName()).log(Level.SEVERE, null, ex);
+            this.jLabel_error.setText("Error conectando con Solr.");
         }
     }//GEN-LAST:event_jButton_buscarActionPerformed
 
@@ -208,11 +275,15 @@ public class VistaBuscador extends javax.swing.JFrame {
     public javax.swing.JComboBox<String> jComboBox_campoBusqueda;
     private javax.swing.JLabel jLabel_coleccion;
     public javax.swing.JLabel jLabel_error;
+    private javax.swing.JLabel jLabel_textoRespuesta;
+    private javax.swing.JLabel jLabel_textoRespuestaIA;
     public javax.swing.JLabel jLabel_titulo;
     private javax.swing.JPanel jPanel;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JPopupMenu jPopupMenu2;
+    public javax.swing.JScrollPane jScrollPane_respuestaIA;
     private javax.swing.JScrollPane jScrollPane_resultadoConsulta;
+    public javax.swing.JTextArea jTextArea_respuestaIA;
     public javax.swing.JTextArea jTextArea_resultadoConsulta;
     public javax.swing.JTextField jTextField_nomColeccion;
     public javax.swing.JTextField jTextField_textoConsulta;

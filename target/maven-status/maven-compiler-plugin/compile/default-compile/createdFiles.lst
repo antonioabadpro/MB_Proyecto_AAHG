@@ -3,6 +3,8 @@ gui\VistaBuscador$2.class
 gui\VistaBuscador$1.class
 practica\Separadora.class
 gui\VistaBuscador$3.class
+practica\Rag.class
 practica\Solr.class
+rag\ConsultaRag.class
 practica\Fichero.class
 gui\VistaBuscador.class
