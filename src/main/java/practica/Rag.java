@@ -17,20 +17,19 @@ public class Rag
     // URL de tu servidor local LM Studio
     private static final String API_URL = "http://127.0.0.1:1234/v1/chat/completions";
     //private static final String API_URL = "http://localhost:1234/v1/chat/completions";
-    // El ID exacto del modelo que aparece en tu captura
-    private static final String MODEL_ID = "google/gemma-3n-e4b";
+    private static final String MODEL_ID = "google/gemma-3n-e4b"; // Modelo utilizado desde LM Studio
 
     public String generarRespuestaRAG(String preguntaUsuario, String contextoSolr)
     {
         try
         {
-            // 1. Construir el Prompt del Sistema + Usuario
-            // Le decimos a la IA que use SOLO el contexto proporcionado.
+            // 1. Construimos el Prompt del Sistema incluyendo el escrito por el Usuario
+            // Le decimos a la IA que use solo el contexto proporcionado
             String systemPrompt = "Eres un asistente útil. Responde a la pregunta basándote ÚNICAMENTE en el contexto proporcionado a continuación. Si la respuesta no está en el contexto, di: 'No lo se aún, estoy trabajando en ello'.";
 
             String finalPrompt = "Contexto:\n" + contextoSolr + "\n\nPregunta: " + preguntaUsuario;
 
-            // 2. Crear el JSON del cuerpo (Body)
+            // 2. Creamos el JSON del cuerpo (Body)
             JSONObject userMessage = new JSONObject();
             userMessage.put("role", "user");
             userMessage.put("content", finalPrompt);
@@ -47,23 +46,22 @@ public class Rag
             requestBody.put("model", MODEL_ID);
             requestBody.put("messages", messages);
             requestBody.put("temperature", 0.3);
-            requestBody.put("max_tokens", 300); // -1 suele ser infinito/automático en LM Studio
-            //requestBody.put("stream", false);
+            requestBody.put("max_tokens", 300);
 
-            // 3. Configurar Cliente HTTP
+            // 3. Configuramos Cliente HTTP
             HttpClient client = HttpClient.newBuilder()
-                    .version(HttpClient.Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(20))
+                    .version(HttpClient.Version.HTTP_1_1) // Si NO le pongo esta linea para la version NO se conecta con LM Studio
+                    .connectTimeout(Duration.ofSeconds(60))
                     .build();
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(API_URL))
                     .header("Content-Type", "application/json")
-                    .timeout(Duration.ofSeconds(90))
+                    .timeout(Duration.ofSeconds(300))
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                     .build();
 
-            // 4. Enviar y recibir respuesta
+            // 4. Enviamos y esperamos la respuesta de la IA
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200)
