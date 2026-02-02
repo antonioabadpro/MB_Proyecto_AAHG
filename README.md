@@ -118,6 +118,14 @@ La interfaz gráfica ofrece dos modalidades de búsqueda:
 
 ---
 
+## 📑 Documentación y Presentación
+
+[![Memoria Técnica](https://img.shields.io/badge/PDF-Ver_Presentación-EC1C24?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](https://github.com/antonioabadpro/MB_Proyecto_AAHG/blob/main/MB_Presentacion_Practicas_AAHG.pdf)
+
+> **Nota:** Haz clic en el botón de arriba para visualizar o descargar la presentación del proyecto en PDF donde se explican en detalle las mejoras del motor de búsqueda, la arquitectura RAG y el análisis exhaustivo de los resultados obtenidos.
+
+---
+
 ## 👤 Autor
 
 **Antonio Abad Hernández Gálvez**
